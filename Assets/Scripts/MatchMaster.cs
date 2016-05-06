@@ -1,10 +1,10 @@
 ﻿using UnityEngine;
+using System.Collections;
 using System.Collections.Generic;
 
 public class MatchMaster : MonoBehaviour
 {
 	public LayerMask matchSearchLayerMask;
-	public Grid grid;
 
 	private float neighborSearchRadius = 0.85f;
 
@@ -43,17 +43,23 @@ public class MatchMaster : MonoBehaviour
 			}
 		}
 
-		if( matchedDots.Count < 3 )
+		if( matchedDots.Count >= 3 )
 		{
-			// early return
-			return;
+			StartCoroutine( TriggerMatchSequence( matchedDots ) );
 		}
+	}
 
+	private IEnumerator TriggerMatchSequence( List<DotScript> matchedDots )
+	{
 		for( int i = 0; i < matchedDots.Count; i++ )
 		{
-			Destroy( matchedDots[ i ].gameObject );
+			matchedDots[ i ].OnMatched();
+			yield return new WaitForSeconds( 0.05f );
+			//Destroy( matchedDots[ i ].gameObject );
 		}
 
-		StartCoroutine( grid.Repopulate() );
+		yield return new WaitForSeconds( 0.2f );
+
+		EventManager.TriggerEvent( "RepopGrid" );
 	}
 }

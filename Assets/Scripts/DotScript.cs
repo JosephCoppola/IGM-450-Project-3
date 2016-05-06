@@ -1,13 +1,16 @@
 ﻿using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class DotScript : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerClickHandler
+public class DotScript : MonoBehaviour, IDragHandler, IPointerUpHandler, IPointerClickHandler, IPointerDownHandler
 {
 	public LayerMask dragLayerMask;
 
 	public SpriteRenderer mySpriteRenderer;
 	public SpriteRenderer borderSpriteRenderer;
 	public TextMesh numberText;
+	public SpriteRenderer numberDotSprite;
+
+	public Sprite[] numberSprites;
 
 	private DotColor.ColorValue colorValue;
 	private int dragLength;
@@ -22,13 +25,12 @@ public class DotScript : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
 		}
 	}
 
-	public void OnBeginDrag( PointerEventData e )
+	public void OnPointerDown( PointerEventData e )
 	{
 		if( colorValue < DotColor.ColorValue.PRIMARY_COLORS )
 		{
 			DragManager.Instance.StartDrag( this );
 			dragging = true;
-			DragManager.Instance.DragMove( Camera.main.ScreenToWorldPoint( e.position ) );
 		}
 	}
 
@@ -40,20 +42,16 @@ public class DotScript : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
 			return;
 		}
 		Vector2 pos = Camera.main.ScreenToWorldPoint( e.position );
-		DragManager.Instance.DragMove( pos );
 		RaycastHit2D hit = Physics2D.Raycast( pos, Vector2.zero, 0.0f, dragLayerMask );
 
 		if( hit.collider != null )
 		{
 			GameObject go = hit.collider.gameObject;
-			if( go != gameObject )
-			{
-				DragManager.Instance.DragOverDot( go.GetComponent<DotScript>() );
-			}
+			DragManager.Instance.DragOverDot( go.GetComponent<DotScript>() );
 		}
 	}
 
-	public void OnEndDrag( PointerEventData e )
+	public void OnPointerUp( PointerEventData e )
 	{
 		if( !dragging )
 		{
@@ -91,7 +89,17 @@ public class DotScript : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
 	public void SetDragLength( int num )
 	{
 		dragLength = num;
-		numberText.text = (num > 0 ? "" + num : "");
+		//numberText.text = (num > 0 ? "" + num : "");
+		if( num > 0 )
+		{
+			numberDotSprite.enabled = true;
+			numberDotSprite.sprite = numberSprites[ num - 1 ];
+			//numberDotSprite.color = Color.white;
+		}
+		else
+		{
+			numberDotSprite.enabled = false;
+		}
 	}
 
 	public void MarkToBlend( DotColor.ColorValue incomingColor )
@@ -105,16 +113,38 @@ public class DotScript : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
 
 		if( IsSecondaryColor( blend ) )
 		{
-			numberText.text = "";
+			//numberText.text = "";
+			numberDotSprite.enabled = false;
 		}
 		else if( colorValue == incomingColor )
 		{
-			numberText.text = "" + ( dragLength + 1 );
+			//numberText.text = "" + ( dragLength + 1 );
+			numberDotSprite.sprite = numberSprites[ dragLength ];
+			//numberDotSprite.color = newColor;
 		}
-		else if( colorValue == DotColor.ColorValue.WHITE )
+		/*else if( colorValue == DotColor.ColorValue.WHITE )
 		{
 			numberText.text = "1";
-		}
+		}*/
+	}
+
+	public void Unmark()
+	{
+		mySpriteRenderer.color = DotColor.GetColor( colorValue );
+		borderSpriteRenderer.enabled = false;
+		numberDotSprite.enabled = true;
+		numberDotSprite.sprite = numberSprites[ dragLength - 1 ];
+		//numberDotSprite.color = Color.white;
+	}
+
+	public void OnMatched()
+	{
+		GetComponent<Animator>().SetTrigger( "Exit" );
+	}
+
+	public void OnExitComplete()
+	{
+		Destroy( gameObject );
 	}
 
 	private bool IsSecondaryColor( DotColor.ColorValue col )

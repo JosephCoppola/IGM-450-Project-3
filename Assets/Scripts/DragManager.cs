@@ -3,14 +3,18 @@ using System.Collections.Generic;
 
 public class DragManager : MonoBehaviour
 {
+	public const int MAX_DRAG_LENGTH = 4;
+
 	public LayerMask neighborSearchLayerMask;
 	public GameObject boxPrefab;
 
 	private DotScript[] draggedDots;
 	private List<DotScript> draggableNeighbors;
-	private GameObject[] dragLines;
 
-	private Vector2 pointerPos;
+	private GameObject[] dragLines;
+	private GameObject[] toNeighborLines;
+
+	private Color toNeighborLineColor;
 
 	private int currDragLength = 0;
 	private int maxDragLength;
@@ -32,18 +36,10 @@ public class DragManager : MonoBehaviour
 
 	void Start()
 	{
+		toNeighborLineColor = DotColor.GetColor( DotColor.ColorValue.BLACK );
+		toNeighborLineColor.a = 0.2f;
+
 		draggableNeighbors = new List<DotScript>();
-	}
-
-	void Update()
-	{
-		if( currDragLength >= maxDragLength || !dragging )
-		{
-			// Early return
-			return;
-		}
-
-		DrawDragLine( pointerPos );
 	}
 
 	public void StartDrag( DotScript startingDot )
@@ -56,41 +52,57 @@ public class DragManager : MonoBehaviour
 		draggedDots = new DotScript[ maxDragLength + 1 ]; // +1 to also hold start
 		draggedDots[ 0 ] = startingDot;
 
-		GetDraggableNeighbors();
-		SpawnDragLine();
-	}
+		toNeighborLines = new GameObject[ 0 ];
 
-	public void DragMove( Vector2 pointer )
-	{
-		pointerPos = pointer;
+		GetDraggableNeighbors();
+		//SpawnDragLine();
 	}
 
 	public void DragOverDot( DotScript dotToAdd )
 	{
-		if( currDragLength >= maxDragLength )
+		if( !dragging )
 		{
-			// Early return
+			// early return
 			return;
 		}
 
-		if( draggableNeighbors.Contains( dotToAdd ) )
+		if( currDragLength > 0 && dotToAdd == draggedDots[ currDragLength - 1 ] )
 		{
-			DrawDragLine( dotToAdd.transform.position );
-			currDragLength++;
-			draggedDots[ currDragLength ] = dotToAdd;
-			dotToAdd.MarkToBlend( draggedDots[ 0 ].ColorValue );
-			draggedDots[ 0 ].SetDragLength( draggedDots[ 0 ].DragLength - 1 );
-			GetDraggableNeighbors();
+			RemoveLastDot();
+			// also early return
+			return;
+		}
 
-			if( currDragLength < maxDragLength )
+		if( currDragLength < maxDragLength )
+		{
+			if( draggableNeighbors.Contains( dotToAdd ) )
 			{
-				SpawnDragLine();
+				SpawnDragLine( dotToAdd.transform.position );
+				//DrawDragLine( dotToAdd.transform.position );
+				currDragLength++;
+				draggedDots[ currDragLength ] = dotToAdd;
+				dotToAdd.MarkToBlend( draggedDots[ 0 ].ColorValue );
+				draggedDots[ 0 ].SetDragLength( draggedDots[ 0 ].DragLength - 1 );
+
+				ClearToNeighborLines();
+
+				if( currDragLength < maxDragLength )
+				{
+					//SpawnDragLine();
+					GetDraggableNeighbors();
+				}
 			}
 		}
 	}
 
 	public void EndDrag()
 	{
+		if( !dragging )
+		{
+			// Early return
+			return;
+		}
+
 		DotScript startDot = draggedDots[ 0 ];
 
 		for( int i = 1; i < draggedDots.Length; i++ )
@@ -120,10 +132,13 @@ public class DragManager : MonoBehaviour
 		//startDot.SetDragLength( newLength );
 		if( startDot.DragLength <= 0 )
 		{
-			startDot.SetColor( DotColor.ColorValue.WHITE );
+			//startDot.SetColor( DotColor.ColorValue.WHITE );
+			Destroy( startDot.gameObject );
+			EventManager.TriggerEvent( "RepopGrid" );
 		}
 
 		ClearDragLines();
+		ClearToNeighborLines();
 
 		dragging = false;
 	}
@@ -146,51 +161,97 @@ public class DragManager : MonoBehaviour
 				// Don't include the one we're dragging
 				continue;
 			}
-
-			if( IsDraggableNeighbor( dot ) )
+				
+			if( IsDraggableNeighbor( dot, draggedDots[ 0 ].ColorValue ) )
 			{
 				draggableNeighbors.Add( dot );
 			}
 		}
+
+		ClearToNeighborLines();
+		SpawnToNeighborLines();
 	}
 
-	private bool IsDraggableNeighbor( DotScript dot )
+	private bool IsDraggableNeighbor( DotScript dot, DotColor.ColorValue dragColor )
 	{
-		return ( dot.ColorValue < DotColor.ColorValue.PRIMARY_COLORS || dot.ColorValue == DotColor.ColorValue.WHITE );
+		bool isPrimary = ( dot.ColorValue < DotColor.ColorValue.PRIMARY_COLORS );
+		bool stackFull = ( dot.DragLength >= MAX_DRAG_LENGTH ) && ( dot.ColorValue == dragColor );
+
+		if( currDragLength > 0 )
+		{
+			if( dot == draggedDots[ currDragLength - 1 ] )
+			{
+				return false;
+			}
+		}
+
+		for( int i = currDragLength - 2; i >= 0; i-- )
+		{
+			if( dot == draggedDots[ i ] )
+			{
+				return false;
+			}
+		}
+
+		return ( isPrimary && !stackFull );
 	}
 
 	private void RemoveLastDot()
 	{
+		DotScript startDot = draggedDots[ 0 ]; 
+		startDot.SetDragLength( startDot.DragLength + 1 );
+		ClearToNeighborLines();
+		draggedDots[ currDragLength ].Unmark();
 		draggedDots[ currDragLength ] = null;
 		currDragLength--;
+		Destroy( dragLines[ currDragLength ] );
+
+		GetDraggableNeighbors();
 	}
 
-	private void SpawnDragLine()
+	private void SpawnToNeighborLines()
 	{
-		GameObject dragLine = (GameObject)Instantiate( boxPrefab );
-		dragLine.transform.parent = transform;
-		dragLines[ currDragLength ] = dragLine;
-		dragLine.transform.position = draggedDots[ currDragLength ].transform.position;
-
-		Color lineColor = DotColor.GetColor( draggedDots[ 0 ].ColorValue );
-		dragLine.GetComponent<SpriteRenderer>().color = lineColor;
-	}
-
-	private void DrawDragLine( Vector2 targetPos )
-	{
-		if( dragLines[ currDragLength ] != null )
+		toNeighborLines = new GameObject[ draggableNeighbors.Count ];
+		for( int i = 0; i < draggableNeighbors.Count; i++ )
 		{
-			GameObject line = dragLines[ currDragLength ];
-
-			Vector2 linePos = line.transform.position;
-			Vector2 pos2 = targetPos - linePos;
-
-			float angle = Mathf.Atan2( pos2.y, pos2.x ) * Mathf.Rad2Deg;
-
-			line.transform.rotation = Quaternion.Euler( new Vector3( 0, 0, angle ) );
-			float length = Mathf.Min( 1.0f, Vector2.Distance( linePos, targetPos ) ) * 4.0f;
-			line.transform.localScale = new Vector3( length, 1.0f, 1.0f );
+			Vector2 targetPos = draggableNeighbors[ i ].transform.position;
+			toNeighborLines[ i ] = SpawnLine( targetPos, toNeighborLineColor );
 		}
+	}
+
+	private void ClearToNeighborLines()
+	{
+		for( int i = 0; i < toNeighborLines.Length; i++ )
+		{
+			Destroy( toNeighborLines[ i ] );
+		}
+	}
+
+	private void SpawnDragLine( Vector2 targetPos )
+	{
+		Color lineColor = DotColor.GetColor( draggedDots[ 0 ].ColorValue );
+		dragLines[ currDragLength ] = SpawnLine( targetPos, lineColor );
+	}
+
+	private GameObject SpawnLine( Vector3 end, Color lineColor )
+	{
+		GameObject line = (GameObject)Instantiate( boxPrefab );
+		line.transform.parent = transform;
+		dragLines[ currDragLength ] = line;
+		line.transform.position = draggedDots[ currDragLength ].transform.position;
+
+		line.GetComponent<SpriteRenderer>().color = lineColor;
+
+		Vector3 linePos = line.transform.position;
+		Vector3 pos2 = end - linePos;
+
+		float angle = Mathf.Atan2( pos2.y, pos2.x ) * Mathf.Rad2Deg;
+
+		line.transform.rotation = Quaternion.Euler( new Vector3( 0, 0, angle ) );
+		float length = Mathf.Min( 1.0f, Vector2.Distance( linePos, end ) ) * 4.0f;
+		line.transform.localScale = new Vector3( length, 1.0f, 1.0f );
+
+		return line;
 	}
 
 	private void ClearDragLines()
