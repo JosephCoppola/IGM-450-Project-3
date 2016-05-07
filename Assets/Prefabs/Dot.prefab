@@ -32,6 +32,22 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!1 &166466
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 468346}
+  - 212: {fileID: 21288808}
+  m_Layer: 0
+  m_Name: Number
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
   m_IsActive: 1
 --- !u!1 &197814
 GameObject:
@@ -45,6 +61,7 @@ GameObject:
   - 58: {fileID: 5870260}
   - 114: {fileID: 11457296}
   - 95: {fileID: 9520484}
+  - 114: {fileID: 11432638}
   m_Layer: 8
   m_Name: Dot
   m_TagString: Untagged
@@ -76,6 +93,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 479618}
   m_RootOrder: 1
+--- !u!4 &468346
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 166466}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 479618}
+  m_RootOrder: 2
 --- !u!4 &479618
 Transform:
   m_ObjectHideFlags: 1
@@ -88,6 +117,7 @@ Transform:
   m_Children:
   - {fileID: 415846}
   - {fileID: 467776}
+  - {fileID: 468346}
   m_Father: {fileID: 0}
   m_RootOrder: 0
 --- !u!23 &2360000
@@ -168,6 +198,17 @@ TextMesh:
   m_Color:
     serializedVersion: 2
     rgba: 4281545523
+--- !u!114 &11432638
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 197814}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f571eea2285fa4fdaa81772e81491b8f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &11457296
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -185,6 +226,12 @@ MonoBehaviour:
   mySpriteRenderer: {fileID: 21243064}
   borderSpriteRenderer: {fileID: 21237180}
   numberText: {fileID: 10220800}
+  numberDotSprite: {fileID: 21288808}
+  numberSprites:
+  - {fileID: 21300000, guid: d9f258066bd764996ad3ec27e6db983a, type: 3}
+  - {fileID: 21300002, guid: d9f258066bd764996ad3ec27e6db983a, type: 3}
+  - {fileID: 21300004, guid: d9f258066bd764996ad3ec27e6db983a, type: 3}
+  - {fileID: 21300006, guid: d9f258066bd764996ad3ec27e6db983a, type: 3}
 --- !u!212 &21237180
 SpriteRenderer:
   m_ObjectHideFlags: 1
@@ -211,7 +258,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingOrder: -10
-  m_Sprite: {fileID: 21300000, guid: dd68553e31c8b4ecaa88dfea88f3a2b0, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 8274c5d38a8ef4fecaf1eab1631c2f7e, type: 3}
   m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -241,7 +288,37 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: dd68553e31c8b4ecaa88dfea88f3a2b0, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 8274c5d38a8ef4fecaf1eab1631c2f7e, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_FlipX: 0
+  m_FlipY: 0
+--- !u!212 &21288808
+SpriteRenderer:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 166466}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_Materials:
+  - {fileID: 10754, guid: 0000000000000000e000000000000000, type: 0}
+  m_SubsetIndices: 
+  m_StaticBatchRoot: {fileID: 0}
+  m_UseLightProbes: 0
+  m_ReflectionProbeUsage: 0
+  m_ProbeAnchor: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingOrder: 10
+  m_Sprite: {fileID: 21300000, guid: d9f258066bd764996ad3ec27e6db983a, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -252,6 +329,10 @@ Prefab:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 0}
+      propertyPath: numberSprites.Array.size
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: dragLayerMask.m_Bits
       value: 256
@@ -275,6 +356,38 @@ Prefab:
     - target: {fileID: 0}
       propertyPath: m_Color.b
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: numberSprites.Array.data[0]
+      value: 
+      objectReference: {fileID: 21300000, guid: d9f258066bd764996ad3ec27e6db983a,
+        type: 3}
+    - target: {fileID: 0}
+      propertyPath: numberSprites.Array.data[1]
+      value: 
+      objectReference: {fileID: 21300002, guid: d9f258066bd764996ad3ec27e6db983a,
+        type: 3}
+    - target: {fileID: 0}
+      propertyPath: numberSprites.Array.data[2]
+      value: 
+      objectReference: {fileID: 21300004, guid: d9f258066bd764996ad3ec27e6db983a,
+        type: 3}
+    - target: {fileID: 0}
+      propertyPath: numberSprites.Array.data[3]
+      value: 
+      objectReference: {fileID: 21300006, guid: d9f258066bd764996ad3ec27e6db983a,
+        type: 3}
+    - target: {fileID: 0}
+      propertyPath: numberDotSprite
+      value: 
+      objectReference: {fileID: 21288808}
+    - target: {fileID: 0}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}

@@ -4,12 +4,14 @@ using System.Collections;
 public class Grid : MonoBehaviour
 {
 	public DotScript dotPrefab;
-	public float percWhite = 0.1f;
+	//public float percWhite = 0.1f;
 
 	private Transform[,] gridSpaces;
 
 	void Start()
 	{
+		EventManager.AddEventListener( "RepopGrid", StartRepop );
+
 		InitGrid();
 		SpawnInitialDots();
 	}
@@ -23,18 +25,43 @@ public class Grid : MonoBehaviour
 		}
 	}
 
-	public IEnumerator Repopulate()
+	private void StartRepop()
+	{
+		StartCoroutine( Repopulate() );
+	}
+
+	private IEnumerator Repopulate()
 	{
 		yield return new WaitForSeconds( 0.3f );
 
+		int numSpawned = 0;
+
 		for( int i = 0; i < gridSpaces.GetLength( 0 ); i++ )
 		{
-			for( int j = 0; j < gridSpaces.GetLength( 1 ); j++ )
+			for( int j = gridSpaces.GetLength( 1 ) - 1; j >= 0; j-- )
 			{
 				Transform gridSpace = gridSpaces[ i, j ];
 				if( gridSpace.childCount == 0 )
 				{
-					SpawnDotAtGridSpace( gridSpace );
+					bool foundChild = false;
+					for( int h = j - 1; h >= 0; h-- )
+					{
+						Transform nextGridSpace = gridSpaces[ i, h ];
+				
+						if( nextGridSpace.childCount > 0 )
+						{
+							foundChild = true;
+							nextGridSpace.GetChild( 0 ).parent = gridSpace;
+							break;
+						}
+					}
+
+					if( !foundChild )
+					{
+						StartCoroutine( FancySpawnDot( gridSpace, numSpawned ) );
+						numSpawned++;
+						//SpawnDotAtGridSpace( gridSpace );
+					}
 				}
 			}
 		}
@@ -78,11 +105,13 @@ public class Grid : MonoBehaviour
 	{
 		for( int i = 0; i < gridSpaces.GetLength( 0 ); i++ )
 		{
-			for( int j = 0; j < gridSpaces.GetLength( 1 ); j++ )
+			//for( int j = 0; j < gridSpaces.GetLength( 1 ); j++ )
+			for( int j = gridSpaces.GetLength( 1 ) - 1; j >= 0; j-- )
 			{
 				Transform gridSpace = gridSpaces[ i, j ];
-				SpawnDotAtGridSpace( gridSpace );
-				//StartCoroutine( FancySpawnDot( gridSpace, i * 5 + j ) );
+				//SpawnDotAtGridSpace( gridSpace );
+				int offset = gridSpaces.GetLength( 1 ) - 1 - j;
+				StartCoroutine( FancySpawnDot( gridSpace, i * 5 + offset ) );
 				//StartCoroutine( FancySpawnDot( gridSpace, j ) );
 			}
 		}
@@ -92,17 +121,10 @@ public class Grid : MonoBehaviour
 	{
 		if( color == DotColor.ColorValue.BLACK )
 		{
-			if( Random.Range( 0.0f, 1.0f ) > percWhite )
-			{
-				color = (DotColor.ColorValue) Random.Range( 0, 3 );
-			}
-			else
-			{
-				color = DotColor.ColorValue.WHITE;
-			}
+			color = (DotColor.ColorValue) Random.Range( 0, 3 );
 		}
 
-		Vector3 pos = gridSpace.position;
+		Vector3 pos = gridSpace.position + Vector3.up * 0.9375f * 5.0f;
 		DotScript dot = (DotScript)Instantiate( dotPrefab, pos, Quaternion.identity );
 		dot.transform.parent = gridSpace;
 		dot.SetColor( color );
@@ -113,7 +135,7 @@ public class Grid : MonoBehaviour
 
 	private IEnumerator FancySpawnDot( Transform gridSpace, int offset )
 	{
-		yield return new WaitForSeconds( 0.1f * offset );
+		yield return new WaitForSeconds( 0.05f * offset );
 		SpawnDotAtGridSpace( gridSpace );
 	}
 
