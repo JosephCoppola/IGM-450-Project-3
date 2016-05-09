@@ -44,6 +44,12 @@ public class DragManager : MonoBehaviour
 
 	public void StartDrag( DotScript startingDot )
 	{
+		if( dragging )
+		{
+			// Early return
+			return;
+		}
+		
 		dragging = true;
 
 		currDragLength = 0;
