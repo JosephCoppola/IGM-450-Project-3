@@ -14,6 +14,7 @@ public class Grid : MonoBehaviour
 
 		InitGrid();
 		SpawnInitialDots();
+		//SpawnTutorialDots();
 	}
 
 	void Update()
@@ -105,21 +106,46 @@ public class Grid : MonoBehaviour
 	{
 		for( int i = 0; i < gridSpaces.GetLength( 0 ); i++ )
 		{
-			//for( int j = 0; j < gridSpaces.GetLength( 1 ); j++ )
 			for( int j = gridSpaces.GetLength( 1 ) - 1; j >= 0; j-- )
 			{
 				Transform gridSpace = gridSpaces[ i, j ];
-				//SpawnDotAtGridSpace( gridSpace );
 				int offset = gridSpaces.GetLength( 1 ) - 1 - j;
 				StartCoroutine( FancySpawnDot( gridSpace, i * 5 + offset ) );
-				//StartCoroutine( FancySpawnDot( gridSpace, j ) );
 			}
 		}
 	}
 
-	private void SpawnDotAtGridSpace( Transform gridSpace, DotColor.ColorValue color = DotColor.ColorValue.BLACK )
+	private void SpawnTutorialDots()
 	{
-		if( color == DotColor.ColorValue.BLACK )
+		SpawnDotAtGridSpace( gridSpaces[ 1, 2 ], DotColor.ColorValue.PURPLE, 0 );
+		SpawnDotAtGridSpace( gridSpaces[ 3, 2 ], DotColor.ColorValue.PURPLE, 0 );
+		SpawnDotAtGridSpace( gridSpaces[ 2, 2 ], DotColor.ColorValue.BLUE, 1 );
+		SpawnDotAtGridSpace( gridSpaces[ 2, 1 ], DotColor.ColorValue.RED, 1 );
+
+		for( int i = 0; i < gridSpaces.GetLength( 0 ); i++ )
+		{
+			for( int j = gridSpaces.GetLength( 1 ) - 1; j >= 0; j-- )
+			{
+				Transform gridSpace = gridSpaces[ i, j ];
+				SpawnDotAtGridSpace( gridSpace, DotColor.ColorValue.BLACK, 0 );
+			}
+		}
+	}
+
+	private void SpawnDotAtGridSpace( Transform gridSpace )
+	{
+		SpawnDotAtGridSpace( gridSpace, DotColor.ColorValue.NUM_COLORS, -1 );
+	}
+
+	private void SpawnDotAtGridSpace( Transform gridSpace, DotColor.ColorValue color, int dragLength )
+	{
+		if( gridSpace.childCount > 0 )
+		{
+			// Early return
+			return;
+		}
+
+		if( color == DotColor.ColorValue.NUM_COLORS )
 		{
 			color = (DotColor.ColorValue) Random.Range( 0, 3 );
 		}
@@ -129,7 +155,11 @@ public class Grid : MonoBehaviour
 		dot.transform.parent = gridSpace;
 		dot.SetColor( color );
 
-		int dragLength = color != DotColor.ColorValue.WHITE ? Random.Range( 1, gridSpaces.GetLength( 0 ) ) : 0;
+		if( dragLength == -1 )
+		{
+			dragLength = Random.Range( 1, gridSpaces.GetLength( 0 ) );
+		}
+
 		dot.SetDragLength( dragLength );
 	}
 
