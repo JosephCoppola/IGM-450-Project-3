@@ -145,7 +145,7 @@ public class DragManager : MonoBehaviour
 
 	public void CancelDrag( DotScript dot )
 	{
-		if( DragContainsDot( dot ) )
+		if( dragging && DragContainsDot( dot ) )
 		{
 			DotScript startDot = draggedDots[ 0 ]; 
 			startDot.SetDragLength( maxDragLength );

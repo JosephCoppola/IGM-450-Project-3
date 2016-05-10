@@ -17,7 +17,11 @@ public class DotFall : MonoBehaviour
 	{
 		if( transform.position != transform.parent.position )
 		{
-			dotScript.enabled = false;
+			if( dotScript.enabled )
+			{
+				dotScript.CancelDrag();
+				dotScript.enabled = false;
+			}
 			float adjSpeed = speed * Time.deltaTime;
 			transform.position = Vector3.MoveTowards( transform.position, transform.parent.position, adjSpeed );
 			speed += accel * Time.deltaTime;

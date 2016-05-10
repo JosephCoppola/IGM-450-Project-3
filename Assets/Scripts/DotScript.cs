@@ -62,7 +62,7 @@ public class DotScript : MonoBehaviour, IDragHandler, IPointerUpHandler, IPointe
 		DragManager.Instance.EndDrag();
 	}
 
-	public void OnDisable()
+	public void CancelDrag()
 	{
 		DragManager.Instance.CancelDrag( this );
 	}
