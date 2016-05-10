@@ -61,7 +61,6 @@ public class DragManager : MonoBehaviour
 		toNeighborLines = new GameObject[ 0 ];
 
 		GetDraggableNeighbors();
-		//SpawnDragLine();
 	}
 
 	public void DragOverDot( DotScript dotToAdd )
@@ -84,7 +83,6 @@ public class DragManager : MonoBehaviour
 			if( draggableNeighbors.Contains( dotToAdd ) )
 			{
 				SpawnDragLine( dotToAdd.transform.position );
-				//DrawDragLine( dotToAdd.transform.position );
 				currDragLength++;
 				draggedDots[ currDragLength ] = dotToAdd;
 				dotToAdd.MarkToBlend( draggedDots[ 0 ].ColorValue );
@@ -94,7 +92,6 @@ public class DragManager : MonoBehaviour
 
 				if( currDragLength < maxDragLength )
 				{
-					//SpawnDragLine();
 					GetDraggableNeighbors();
 				}
 			}
@@ -133,12 +130,9 @@ public class DragManager : MonoBehaviour
 			DotColor.ColorValue newColor = DotColor.GetBlend( startDot.ColorValue, dot.ColorValue );
 			dot.SetColor( newColor );
 		}
-		
-		//int newLength = startDot.DragLength - currDragLength;
-		//startDot.SetDragLength( newLength );
+
 		if( startDot.DragLength <= 0 )
 		{
-			//startDot.SetColor( DotColor.ColorValue.WHITE );
 			Destroy( startDot.gameObject );
 			EventManager.TriggerEvent( "RepopGrid" );
 		}
@@ -147,6 +141,30 @@ public class DragManager : MonoBehaviour
 		ClearToNeighborLines();
 
 		dragging = false;
+	}
+
+	public void CancelDrag( DotScript dot )
+	{
+		if( DragContainsDot( dot ) )
+		{
+			DotScript startDot = draggedDots[ 0 ]; 
+			startDot.SetDragLength( maxDragLength );
+
+			for( int i = 1; i < draggedDots.Length; i++ )
+			{
+				if( draggedDots[ i ] == null )
+				{
+					break;
+				}
+
+				draggedDots[ i ].Unmark();
+			}
+
+			ClearDragLines();
+			ClearToNeighborLines();
+
+			dragging = false;
+		}
 	}
 
 	private void GetDraggableNeighbors()
@@ -180,26 +198,28 @@ public class DragManager : MonoBehaviour
 
 	private bool IsDraggableNeighbor( DotScript dot, DotColor.ColorValue dragColor )
 	{
+		if( DragContainsDot( dot ) )
+		{
+			return false;
+		}
+
 		bool isPrimary = ( dot.ColorValue < DotColor.ColorValue.PRIMARY_COLORS );
 		bool stackFull = ( dot.DragLength >= MAX_DRAG_LENGTH ) && ( dot.ColorValue == dragColor );
 
-		if( currDragLength > 0 )
-		{
-			if( dot == draggedDots[ currDragLength - 1 ] )
-			{
-				return false;
-			}
-		}
+		return ( isPrimary && !stackFull );
+	}
 
-		for( int i = currDragLength - 2; i >= 0; i-- )
+	private bool DragContainsDot( DotScript dot )
+	{
+		for( int i = currDragLength - 1; i >= 0; i-- )
 		{
 			if( dot == draggedDots[ i ] )
 			{
-				return false;
+				return true;
 			}
 		}
 
-		return ( isPrimary && !stackFull );
+		return false;
 	}
 
 	private void RemoveLastDot()
