@@ -5,6 +5,7 @@ using System.Collections.Generic;
 public class MatchMaster : MonoBehaviour
 {
 	public LayerMask matchSearchLayerMask;
+	public ScoreMaster scoreMaster;
 
 	private float neighborSearchRadius = 0.85f;
 
@@ -51,7 +52,8 @@ public class MatchMaster : MonoBehaviour
 
 	private IEnumerator TriggerMatchSequence( List<DotScript> matchedDots )
 	{
-		for( int i = 0; i < matchedDots.Count; i++ )
+		int numMatched = matchedDots.Count;
+		for( int i = 0; i < numMatched; i++ )
 		{
 			matchedDots[ i ].OnMatched();
 			yield return new WaitForSeconds( 0.05f );
@@ -60,6 +62,7 @@ public class MatchMaster : MonoBehaviour
 
 		yield return new WaitForSeconds( 0.2f );
 
+		scoreMaster.AddScoreForMatch( numMatched );
 		EventManager.TriggerEvent( "RepopGrid" );
 	}
 }
