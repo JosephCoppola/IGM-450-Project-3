@@ -145,7 +145,13 @@ public class DragManager : MonoBehaviour
 
 	public void CancelDrag( DotScript dot )
 	{
-		if( dragging && DragContainsDot( dot ) )
+		if( !dragging )
+		{
+			// early return
+			return;
+		}
+
+		if( DragContainsDot( dot ) )
 		{
 			DotScript startDot = draggedDots[ 0 ]; 
 			startDot.SetDragLength( maxDragLength );
@@ -164,6 +170,10 @@ public class DragManager : MonoBehaviour
 			ClearToNeighborLines();
 
 			dragging = false;
+		}
+		else if( IsDraggableNeighbor( dot, draggedDots[ 0 ].ColorValue ) )
+		{
+			GetDraggableNeighbors();
 		}
 	}
 
@@ -211,7 +221,7 @@ public class DragManager : MonoBehaviour
 
 	private bool DragContainsDot( DotScript dot )
 	{
-		for( int i = currDragLength - 1; i >= 0; i-- )
+		for( int i = currDragLength; i >= 0; i-- )
 		{
 			if( dot == draggedDots[ i ] )
 			{
