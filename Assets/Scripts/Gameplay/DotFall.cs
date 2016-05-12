@@ -3,6 +3,7 @@ using System.Collections;
 
 public class DotFall : MonoBehaviour
 {
+	private SoundSystem soundSystem;
 	private DotScript dotScript;
 	private Collider2D dotCollider;
 	private float speed = 5.0f;
@@ -10,6 +11,7 @@ public class DotFall : MonoBehaviour
 
 	void Start()
 	{
+		soundSystem = GetComponent<SoundSystem>();
 		dotCollider = GetComponent<Collider2D>();
 		dotScript = GetComponent<DotScript>();
 		dotScript.enabled = false;
@@ -31,6 +33,7 @@ public class DotFall : MonoBehaviour
 		}
 		else if( !dotScript.enabled )
 		{
+			soundSystem.PlayOneShot( "dotFallSound", 0.2f );
 			dotCollider.enabled = true;
 			dotScript.enabled = true;
 			speed = 5.0f;

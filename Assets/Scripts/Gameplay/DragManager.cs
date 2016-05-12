@@ -8,6 +8,8 @@ public class DragManager : MonoBehaviour
 	public LayerMask neighborSearchLayerMask;
 	public GameObject boxPrefab;
 
+	private SoundSystem soundSystem;
+
 	private DotScript[] draggedDots;
 	private List<DotScript> draggableNeighbors;
 
@@ -36,6 +38,8 @@ public class DragManager : MonoBehaviour
 
 	void Start()
 	{
+		soundSystem = GetComponent<SoundSystem>();
+
 		toNeighborLineColor = DotColor.GetColor( DotColor.ColorValue.BLACK );
 		toNeighborLineColor.a = 0.2f;
 
@@ -61,6 +65,8 @@ public class DragManager : MonoBehaviour
 		toNeighborLines = new GameObject[ 0 ];
 
 		GetDraggableNeighbors();
+
+		//soundSystem.PlayOneShot( "dragOverSound" );
 	}
 
 	public void DragOverDot( DotScript dotToAdd )
@@ -94,6 +100,8 @@ public class DragManager : MonoBehaviour
 				{
 					GetDraggableNeighbors();
 				}
+
+				soundSystem.PlayOneShot( "dragOverSound" );
 			}
 		}
 	}
@@ -141,6 +149,13 @@ public class DragManager : MonoBehaviour
 		ClearToNeighborLines();
 
 		dragging = false;
+
+		if( currDragLength > 0 )
+		{
+			soundSystem.PlayOneShot( "releaseDragSound" );
+
+			EventManager.TriggerEvent( "CompletedMove" );
+		}
 	}
 
 	public void CancelDrag( DotScript dot )
