@@ -13,14 +13,17 @@ public class MoveModeScript : MonoBehaviour
 		get { return numMoves; }
 	}
 
-	void Start()
+	void Awake()
 	{
 		if( GameMode.CurrentMode == GameMode.Mode.MOVES )
 		{
 			useMatchMode = true;
 			numMoves = MATCH_MODE_MOVES;
 		}
+	}
 
+	void Start()
+	{
 		EventManager.AddEventListener( "CompletedMove", OnMoveCompleted );
 	}
 
@@ -33,6 +36,6 @@ public class MoveModeScript : MonoBehaviour
 			EventManager.TriggerEvent( "GameOver" );
 		}
 
-		//print( numMoves );
+		EventManager.TriggerEvent( "MovesChange" );
 	}
 }

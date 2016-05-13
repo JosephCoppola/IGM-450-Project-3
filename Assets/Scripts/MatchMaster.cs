@@ -72,6 +72,7 @@ public class MatchMaster : MonoBehaviour
 		int amt = (int)( SCORE_MULT * ( 0.5f * numMatched - 0.5f ) );
 		score += amt;
 		timer.AddScoreToTime( numMatched );
+		EventManager.TriggerEvent( "ScoreUp" );
 	}
 
 	private IEnumerator TriggerMatchSequence( List<DotScript> matchedDots )
