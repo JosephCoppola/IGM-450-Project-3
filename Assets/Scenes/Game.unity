@@ -4667,6 +4667,7 @@ MonoBehaviour:
   mainMenuButton: {fileID: 1073386057}
   playAgainButton: {fileID: 1819259583}
   resumeButton: {fileID: 1629622996}
+  headerTxt: {fileID: 852627331}
   highScoreHeaderTxt: {fileID: 1305229816}
   highScoreTxt: {fileID: 1546093207}
   scoreTxt: {fileID: 221431934}

@@ -18,6 +18,8 @@ public class GameUIController : MonoBehaviour {
 	[SerializeField]
 	private Button resumeButton;
 	[SerializeField]
+	private Text headerTxt;
+	[SerializeField]
 	private Text highScoreHeaderTxt;
 	[SerializeField]
 	private Text highScoreTxt;
@@ -40,6 +42,7 @@ public class GameUIController : MonoBehaviour {
 			mainMenuButton.image.color = green;
 			headerMovesModeImage.gameObject.SetActive (true);
 			headerTimeModeImage.gameObject.SetActive (false);
+			headerTxt.text = "Moves Mode";
 		} 
 		else {
 			headerImage.color = green;
@@ -49,6 +52,7 @@ public class GameUIController : MonoBehaviour {
 			mainMenuButton.image.color = blue;
 			headerMovesModeImage.gameObject.SetActive (false);
 			headerTimeModeImage.gameObject.SetActive (true);
+			headerTxt.text = "Time Mode";
 		}
 
 		if (paused) {
