@@ -10,15 +10,13 @@ public class MenuController : MonoBehaviour {
 
 	public void OnTimedClick()
 	{
-		GameTypeInfo infoToPass = Instantiate (gameInfoPrefab).GetComponent<GameTypeInfo> ();
-		infoToPass.timed = true;
+		GameMode.SetGameMode(GameMode.Mode.TIMER);
 		SceneManager.LoadScene ("Game");
 	}
 
 	public void OnMovesClick()
 	{
-		GameTypeInfo infoToPass = Instantiate (gameInfoPrefab).GetComponent<GameTypeInfo> ();
-		infoToPass.timed = false;
+		GameMode.SetGameMode(GameMode.Mode.MOVES);
 		SceneManager.LoadScene ("Game");
 	}
 }

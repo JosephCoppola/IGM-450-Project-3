@@ -37,6 +37,16 @@ public class MatchMaster : MonoBehaviour
 		score = 0;
 	}
 
+	public int RetrieveTimeHighScore()
+	{
+		return PlayerPrefs.HasKey ("TimeHighScore") ? PlayerPrefs.GetInt ("TimeHighScore") : 0;
+	}
+
+	public int RetrieveMoveHighScore()
+	{
+		return PlayerPrefs.HasKey ("MoveHighScore") ? PlayerPrefs.GetInt ("MoveHighScore") : 0;
+	}
+
 	public void CheckMatch( DotScript startingDot )
 	{
 		DotColor.ColorValue targetColor = startingDot.ColorValue;

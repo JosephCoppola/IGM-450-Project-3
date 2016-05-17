@@ -15,6 +15,9 @@ public class BetterThanJoesUI : MonoBehaviour
 	public TimerModeScript timer;
 	public MoveModeScript move;
 
+	[SerializeField]
+	private GameObject gameOverUI;
+
 	private bool showTimer;
 
 	void Start()
@@ -33,6 +36,7 @@ public class BetterThanJoesUI : MonoBehaviour
 
 		EventManager.AddEventListener( "MovesChange", UpdateMoves );
 		EventManager.AddEventListener( "ScoreUp", UpdateScore );
+		EventManager.AddEventListener ("GameOver", OpenGameOver);
 	}
 
 	void Update()
@@ -41,6 +45,11 @@ public class BetterThanJoesUI : MonoBehaviour
 		{
 			UpdateTimeText();
 		}
+	}
+
+	private void OpenGameOver()
+	{
+		gameOverUI.SetActive (true);
 	}
 
 	private void UpdateScore()
