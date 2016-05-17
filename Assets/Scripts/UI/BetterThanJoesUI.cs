@@ -1,13 +1,15 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 public class BetterThanJoesUI : MonoBehaviour
 {
 	public GameObject timeTxtObj;
+	public GameObject moveTxtObj;
 
-	public TextMesh scoreNumTxt;
-	public TextMesh movesNumTxt;
-	public TextMesh timeNumTxt;
+	public Text scoreNumTxt;
+	public Text movesNumTxt;
+	public Text timeNumTxt;
 
 	public MatchMaster matchMaster;
 	public TimerModeScript timer;
@@ -22,6 +24,7 @@ public class BetterThanJoesUI : MonoBehaviour
 		if( showTimer )
 		{
 			timeTxtObj.SetActive( true );
+			moveTxtObj.SetActive(false);
 			UpdateTimeText();
 		}
 
@@ -42,7 +45,7 @@ public class BetterThanJoesUI : MonoBehaviour
 
 	private void UpdateScore()
 	{
-		scoreNumTxt.text = "" + matchMaster.Score;
+		scoreNumTxt.text = "Score : " + matchMaster.Score;
 	}
 
 	private void UpdateMoves()
