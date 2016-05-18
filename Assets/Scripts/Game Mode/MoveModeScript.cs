@@ -8,6 +8,8 @@ public class MoveModeScript : MonoBehaviour
 	private int numMoves = 0;
 	private bool useMatchMode = false;
 
+	private SoundSystem soundSystem;
+
 	public int NumMoves
 	{
 		get { return numMoves; }
@@ -24,6 +26,7 @@ public class MoveModeScript : MonoBehaviour
 
 	void Start()
 	{
+		soundSystem = GetComponent<SoundSystem>();
 		EventManager.AddEventListener( "CompletedMove", OnMoveCompleted );
 	}
 
@@ -33,6 +36,7 @@ public class MoveModeScript : MonoBehaviour
 
 		if( useMatchMode && numMoves <= 0 )
 		{
+			soundSystem.PlayOneShot( "releaseDragSound", 1.0f, 3.0f );
 			EventManager.TriggerEvent( "GameOver" );
 		}
 
