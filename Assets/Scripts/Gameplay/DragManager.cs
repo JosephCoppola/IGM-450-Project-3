@@ -8,6 +8,8 @@ public class DragManager : MonoBehaviour
 	public LayerMask neighborSearchLayerMask;
 	public GameObject boxPrefab;
 
+	private SoundSystem soundSystem;
+
 	private DotScript[] draggedDots;
 	private List<DotScript> draggableNeighbors;
 
@@ -22,6 +24,7 @@ public class DragManager : MonoBehaviour
 	private float neighborSearchRadius = 0.85f;
 
 	private bool dragging;
+	private bool canStartDrag = true;
 
 	public static DragManager Instance
 	{
@@ -36,14 +39,24 @@ public class DragManager : MonoBehaviour
 
 	void Start()
 	{
+		soundSystem = GetComponent<SoundSystem>();
+
 		toNeighborLineColor = DotColor.GetColor( DotColor.ColorValue.BLACK );
 		toNeighborLineColor.a = 0.2f;
 
 		draggableNeighbors = new List<DotScript>();
+
+		EventManager.AddEventListener( "GameOver", OnGameOver );
 	}
 
 	public void StartDrag( DotScript startingDot )
 	{
+		if( dragging || !canStartDrag )
+		{
+			// Early return
+			return;
+		}
+		
 		dragging = true;
 
 		currDragLength = 0;
@@ -55,7 +68,8 @@ public class DragManager : MonoBehaviour
 		toNeighborLines = new GameObject[ 0 ];
 
 		GetDraggableNeighbors();
-		//SpawnDragLine();
+
+		//soundSystem.PlayOneShot( "dragOverSound" );
 	}
 
 	public void DragOverDot( DotScript dotToAdd )
@@ -78,7 +92,6 @@ public class DragManager : MonoBehaviour
 			if( draggableNeighbors.Contains( dotToAdd ) )
 			{
 				SpawnDragLine( dotToAdd.transform.position );
-				//DrawDragLine( dotToAdd.transform.position );
 				currDragLength++;
 				draggedDots[ currDragLength ] = dotToAdd;
 				dotToAdd.MarkToBlend( draggedDots[ 0 ].ColorValue );
@@ -88,9 +101,10 @@ public class DragManager : MonoBehaviour
 
 				if( currDragLength < maxDragLength )
 				{
-					//SpawnDragLine();
 					GetDraggableNeighbors();
 				}
+
+				soundSystem.PlayOneShot( "dragOverSound" );
 			}
 		}
 	}
@@ -127,12 +141,9 @@ public class DragManager : MonoBehaviour
 			DotColor.ColorValue newColor = DotColor.GetBlend( startDot.ColorValue, dot.ColorValue );
 			dot.SetColor( newColor );
 		}
-		
-		//int newLength = startDot.DragLength - currDragLength;
-		//startDot.SetDragLength( newLength );
+
 		if( startDot.DragLength <= 0 )
 		{
-			//startDot.SetColor( DotColor.ColorValue.WHITE );
 			Destroy( startDot.gameObject );
 			EventManager.TriggerEvent( "RepopGrid" );
 		}
@@ -141,6 +152,47 @@ public class DragManager : MonoBehaviour
 		ClearToNeighborLines();
 
 		dragging = false;
+
+		if( currDragLength > 0 )
+		{
+			soundSystem.PlayOneShot( "releaseDragSound" );
+
+			EventManager.TriggerEvent( "CompletedMove" );
+		}
+	}
+
+	public void CancelDrag( DotScript dot )
+	{
+		if( !dragging )
+		{
+			// early return
+			return;
+		}
+
+		if( DragContainsDot( dot ) )
+		{
+			DotScript startDot = draggedDots[ 0 ]; 
+			startDot.SetDragLength( maxDragLength );
+
+			for( int i = 1; i < draggedDots.Length; i++ )
+			{
+				if( draggedDots[ i ] == null )
+				{
+					break;
+				}
+
+				draggedDots[ i ].Unmark();
+			}
+
+			ClearDragLines();
+			ClearToNeighborLines();
+
+			dragging = false;
+		}
+		else if( IsDraggableNeighbor( dot, draggedDots[ 0 ].ColorValue ) )
+		{
+			GetDraggableNeighbors();
+		}
 	}
 
 	private void GetDraggableNeighbors()
@@ -174,26 +226,28 @@ public class DragManager : MonoBehaviour
 
 	private bool IsDraggableNeighbor( DotScript dot, DotColor.ColorValue dragColor )
 	{
+		if( DragContainsDot( dot ) )
+		{
+			return false;
+		}
+
 		bool isPrimary = ( dot.ColorValue < DotColor.ColorValue.PRIMARY_COLORS );
 		bool stackFull = ( dot.DragLength >= MAX_DRAG_LENGTH ) && ( dot.ColorValue == dragColor );
 
-		if( currDragLength > 0 )
-		{
-			if( dot == draggedDots[ currDragLength - 1 ] )
-			{
-				return false;
-			}
-		}
+		return ( isPrimary && !stackFull );
+	}
 
-		for( int i = currDragLength - 2; i >= 0; i-- )
+	private bool DragContainsDot( DotScript dot )
+	{
+		for( int i = currDragLength; i >= 0; i-- )
 		{
 			if( dot == draggedDots[ i ] )
 			{
-				return false;
+				return true;
 			}
 		}
 
-		return ( isPrimary && !stackFull );
+		return false;
 	}
 
 	private void RemoveLastDot()
@@ -207,6 +261,8 @@ public class DragManager : MonoBehaviour
 		Destroy( dragLines[ currDragLength ] );
 
 		GetDraggableNeighbors();
+
+		soundSystem.PlayOneShot( "dragOverSound", 0.7f, 0.6f );
 	}
 
 	private void SpawnToNeighborLines()
@@ -260,5 +316,10 @@ public class DragManager : MonoBehaviour
 		{
 			Destroy( dragLines[ i ] );
 		}
+	}
+
+	private void OnGameOver()
+	{
+		canStartDrag = false;
 	}
 }

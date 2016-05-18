@@ -62,6 +62,11 @@ public class DotScript : MonoBehaviour, IDragHandler, IPointerUpHandler, IPointe
 		DragManager.Instance.EndDrag();
 	}
 
+	public void CancelDrag()
+	{
+		DragManager.Instance.CancelDrag( this );
+	}
+
 	public int DragLength
 	{
 		get { return dragLength; }
@@ -140,6 +145,7 @@ public class DotScript : MonoBehaviour, IDragHandler, IPointerUpHandler, IPointe
 	public void OnMatched()
 	{
 		GetComponent<Animator>().SetTrigger( "Exit" );
+		GetComponent<Collider2D>().enabled = false;
 	}
 
 	public void OnExitComplete()
