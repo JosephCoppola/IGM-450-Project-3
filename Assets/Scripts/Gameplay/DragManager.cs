@@ -258,6 +258,8 @@ public class DragManager : MonoBehaviour
 		Destroy( dragLines[ currDragLength ] );
 
 		GetDraggableNeighbors();
+
+		soundSystem.PlayOneShot( "dragOverSound", 0.7f, 0.6f );
 	}
 
 	private void SpawnToNeighborLines()
