@@ -16,7 +16,7 @@ Swatch is a game where you touch a color and then go dun dun dun over other colo
 * Created game logo and app icon
 
 ### Nick "MF" Conlon - Gameplay Programmer
-* In the beginning Nick created the repo and the Unity project. The Unity project was empty, a formless mass cloaked in darkness. And the Spirit of Nick was hovering over its surface. Then Nick said, "Let there be dots," and there were dots. And Nick saw that it was good. Then he separated the dots from the darkness. Nick called the dots "prefabs" and the darkness "scene." That was the first day of Nick's creation.
+* In the beginning Nick created the repo and the Unity project. The Unity project was empty, a formless mass cloaked in darkness. And the Spirit of Nick was hovering over its surface. Then Nick said, "Let there be dots," and there were dots. And Nick saw that it was good. Then he separated the dots from the darkness. Nick called the dots "prefabs" and the darkness "scenes." That was the first day of Nick's creation.
 * On the second day, Nick created the color.
 * On the third day, Nick created the dragging, the blending and all the numbers.
 * On the fourth day, Nick created the squares, grid and falling.
