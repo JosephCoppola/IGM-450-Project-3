@@ -7,7 +7,7 @@
 * Designed and created mock ups for game screens
 * Created sprite assets used in the game
 
-### Jobobo Copopopo - UI Designer/Programmer/Whatever he calls himself
+### Jobobo Copopopo - The Titular Character (+UI)
 * All the UI that's in the game!
 
 ### Conner Hasbeard - Just a Man with a Plan. And a Beard (+Designer & Sound)
