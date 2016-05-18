@@ -1,6 +1,6 @@
-# Swatch
+<p align="center"><img src ="https://github.com/JosephCoppola/IGM450-Project3/raw/develop/Assets/Sprites/Menu/Logo.png" /></p>
 
-![Game Cover][cover]
+<p align="center"><img src ="https://github.com/nolnocn/IGM450-Project2/raw/master/Assets/bbss.png" /></p>
 
 
 ### Alberto Cappuccino - Hot Cup of Creamy Goodness (+Designer & Arteest)
@@ -10,7 +10,7 @@
 ### Jobobo Copopopo - UI Designer/Programmer/Whatever he calls himself
 * All the UI that's in the game!
 
-### Conner Hasbeard - Just a Man with a Plan. And a Beard (+Designer & Sound Master)
+### Conner Hasbeard - Just a Man with a Plan. And a Beard (+Designer & Sound)
 * Created sound assets used in the game
 * Created game logo and app icon
 
@@ -23,6 +23,3 @@
 * On the sixth day, Nick created all the game modes and gameover.
 * On the seventh day, Nick rested. By the seventh day Nick had finished the work he had been doing; so on the seventh day he rested from all his work. And Nick blessed the seventh day and made it awesome, because on it he rested from all the work of creating that he had done. That is, until Joe decided not to do the UI for last Friday and then Nick had to bail his ass out.
 
-
-[logo]: https://github.com/JosephCoppola/IGM450-Project3/IGM450-Project3/Assets/Sprites/Menu/Logo.png "Swatch"
-[cover]: https://github.com/nolnocn/IGM450-Project2/raw/master/Assets/bbss.png "Game Cover Image"
