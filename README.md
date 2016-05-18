@@ -1,6 +1,6 @@
 <p align="center"><img src ="https://github.com/JosephCoppola/IGM450-Project3/raw/develop/Assets/Sprites/Menu/Logo.png" /></p>
 
-<p align="center"><img src ="https://github.com/nolnocn/IGM450-Project2/raw/master/Assets/bbss.png" /></p>
+<p align="center"><img src ="https://github.com/JosephCoppola/IGM450-Project3/raw/develop/Assets/Sprites/swatchscreenieforerictobehappyforever.png" /></p>
 
 
 ### Alberto Cappuccino - Hot Cup of Creamy Goodness (+Designer & Arteest)
