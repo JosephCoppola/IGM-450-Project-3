@@ -1,5 +1,5 @@
 <p align="center"><img src ="https://github.com/JosephCoppola/IGM450-Project3/raw/develop/Assets/Sprites/Menu/Logo.png" /></p>
-
+<br>
 <p align="center"><img src ="https://github.com/JosephCoppola/IGM450-Project3/raw/develop/Assets/Sprites/swatchscreenieforerictobehappyforever.png" /></p>
 
 
