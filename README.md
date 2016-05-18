@@ -2,6 +2,7 @@
 <br>
 <p align="center"><img src ="https://github.com/JosephCoppola/IGM450-Project3/raw/develop/Assets/Sprites/swatchscreenieforerictobehappyforever.png" /></p>
 
+Swatch is a game when you touch a color and then go dun dun dun over other colors and let go to make other colors. It doesn't make new colors when the colors are the same though, so the numbers on the colors get higher. Actually, that's not entirely true, because the number on the first color gets lower. Sometimes it gets so low it disappears entirely! But that's okay because colors will fall from the sky to take its place. Anyways, when you make those new colors and you get a bunch together you can pop them like da na na na na and you get points and more colors fall from the sky. It's a pretty trippy experience. Sometimes you can only move a few times, sometimes you can only move for a little while. Either way when it's over you can make fun of other people who have less points.
 
 ### Alberto Cappuccino - Hot Cup of Creamy Goodness (+Designer & Arteest)
 * Designed and created mock ups for game screens
