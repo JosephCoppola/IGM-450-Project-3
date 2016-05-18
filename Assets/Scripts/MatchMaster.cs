@@ -79,7 +79,7 @@ public class MatchMaster : MonoBehaviour
 
 	private void AddScoreForMatch( int numMatched )
 	{
-		int amt = (int)( SCORE_MULT * ( 0.5f * numMatched - 0.5f ) );
+		int amt = SCORE_MULT * ( 2 * numMatched - 5 );
 		score += amt;
 		timer.AddScoreToTime( numMatched );
 		EventManager.TriggerEvent( "ScoreUp" );
