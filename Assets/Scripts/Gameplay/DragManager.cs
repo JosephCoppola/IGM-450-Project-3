@@ -24,6 +24,7 @@ public class DragManager : MonoBehaviour
 	private float neighborSearchRadius = 0.85f;
 
 	private bool dragging;
+	private bool canStartDrag = true;
 
 	public static DragManager Instance
 	{
@@ -44,11 +45,13 @@ public class DragManager : MonoBehaviour
 		toNeighborLineColor.a = 0.2f;
 
 		draggableNeighbors = new List<DotScript>();
+
+		EventManager.AddEventListener( "GameOver", OnGameOver );
 	}
 
 	public void StartDrag( DotScript startingDot )
 	{
-		if( dragging )
+		if( dragging || !canStartDrag )
 		{
 			// Early return
 			return;
@@ -313,5 +316,10 @@ public class DragManager : MonoBehaviour
 		{
 			Destroy( dragLines[ i ] );
 		}
+	}
+
+	private void OnGameOver()
+	{
+		canStartDrag = false;
 	}
 }
