@@ -21,6 +21,7 @@ public class SFXLibrary
 
 	public SFXLibrary()
 	{
+		AudioListener.volume = 5.0f;
 		InitLibrary();
 	}
 
