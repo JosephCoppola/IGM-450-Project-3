@@ -24,4 +24,5 @@
 * On the seventh day, Nick rested. By the seventh day Nick had finished the work he had been doing; so on the seventh day he rested from all his work. And Nick blessed the seventh day and made it awesome, because on it he rested from all the work of creating that he had done. That is, until Joe decided not to do the UI for last Friday and then Nick had to bail his ass out.
 
 
+[logo]: https://github.com/JosephCoppola/IGM450-Project3/IGM450-Project3/Assets/Sprites/Menu/Logo.png "Swatch"
 [cover]: https://github.com/nolnocn/IGM450-Project2/raw/master/Assets/bbss.png "Game Cover Image"
