@@ -49,7 +49,7 @@ public class BetterThanJoesUI : MonoBehaviour
 
 	private void OpenGameOver()
 	{
-		gameOverUI.SetActive (true);
+		StartCoroutine( GameOverDelay() );
 	}
 
 	private void UpdateScore()
@@ -65,5 +65,22 @@ public class BetterThanJoesUI : MonoBehaviour
 	private void UpdateTimeText()
 	{
 		timeNumTxt.text = string.Format( "{0:0.0}", timer.TimeRemaining );
+		if( timer.TimeRemaining <= 10f )
+		{
+			if( timeNumTxt.color == Color.black )
+			{
+				timeNumTxt.color = Color.red;
+			}
+		}
+		else if( timeNumTxt.color == Color.red )
+		{
+			timeNumTxt.color = Color.black;
+		}
+	}
+
+	private IEnumerator GameOverDelay()
+	{
+		yield return new WaitForSeconds( 3.0f );
+		gameOverUI.SetActive (true);
 	}
 }
